@@ -49,4 +49,27 @@ def safe_reports(filename: str):
     return reports_status.count(True)
 
 
-print(safe_reports("Day 2 Input"))
+def safe_reports_with_dampener(filename: str):
+    with open(filename, "r") as f:
+        reports = f.readlines()
+
+    reports_status = []
+    for report in reports:
+        report = list(map(int, report.strip().split(" ")))
+        safe = find_unsafe_differences(report) and find_direction_change(report)
+
+        if not safe:
+            tests = []
+            for i in range(len(report)):
+                current_report = report[:i] + report[i+1:]
+                test = find_unsafe_differences(current_report) and find_direction_change(current_report)
+                tests.append(test)
+
+            safe = any(tests)
+
+        reports_status.append(safe)
+
+    return reports_status.count(True)
+
+
+print(safe_reports_with_dampener("Day 2 Input"))
