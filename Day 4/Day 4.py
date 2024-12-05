@@ -181,4 +181,36 @@ def depth_first_search(filename, word):
     return total_words
 
 
-print(depth_first_search("Day 4 Input", "XMAS"))
+def mas_search(wordsearch, word, x, y):
+    if x <= 0 or x >= len(wordsearch[0])-1:
+        return 0
+    elif y <= 0 or y >= len(wordsearch[0])-1:
+        return 0
+
+    left_diagonal_word = f"{wordsearch[y-1][x-1]}{wordsearch[y][x]}{wordsearch[y+1][x+1]}"
+    right_diagonal_word = f"{wordsearch[y-1][x+1]}{wordsearch[y][x]}{wordsearch[y+1][x-1]}"
+
+    if left_diagonal_word == word or left_diagonal_word[::-1] == word:
+        if right_diagonal_word == word or right_diagonal_word[::-1] == word:
+            return 1
+
+    return 0
+
+
+def x_mas_search(filename, word):
+    with open(filename, "r") as f:
+        wordsearch = f.readlines()
+    wordsearch = [s.strip() for s in wordsearch]
+
+    total_words = 0
+    for i in range(len(wordsearch)):
+        line = wordsearch[i]
+        for j in range(len(line)):
+            char = line[j]
+            if char == word[1]:
+                total_words += mas_search(wordsearch, word, j, i)
+
+    return total_words
+
+
+print(x_mas_search("Day 4 Input", "MAS"))
